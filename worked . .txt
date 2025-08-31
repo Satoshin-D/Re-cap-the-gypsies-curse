@@ -1,0 +1,217 @@
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <android/log.h>
+
+    ; Exit (Linux syscall)
+    mov eax, 1          ; sys_exit
+    xor ebx, ebx        ; exit code 0
+    int 0x80
+section .data
+    message db 'Hello world - satoshin nakamoto', 0
+
+section .text
+    global _start
+
+_start:
+    ; 5Gネットワークにメッセージを送信する処理をここに記述
+    ; ここでは擬似的な送信処理を示します
+
+    ; メッセージを表示
+    mov rax, 1          ; sys_write
+    mov rdi, 1          ; stdout
+    mov rsi, message    ; メッセージのアドレス
+    mov rdx, 30         ; メッセージの長さ
+    syscall
+
+    ; プログラムを終了
+    mov rax, 60         ; sys_exit
+    xor rdi, rdi        ; ステータスコード0
+    syscall
+
+section .data
+    RUNNED_UPDATE db 0x0200
+    CHECK_DUPLICATION db 0x0400
+    PLUGINS_SERVER db 0x0800
+
+section .text
+global _start
+
+_start:
+    ; システムタイプの検出
+    call detect_system
+    cmp eax, 1
+    je windows_detected
+    cmp eax, 2
+    je linux_detected
+    jmp end
+
+windows_detected:
+    ; Windowsの場合の処理
+    push dword input.cpp
+    push dword output.c
+    call translate_cpp_to_c
+    jmp end
+
+linux_detected:
+    ; Linuxの場合の処理
+    push dword kernel_info.txt
+    call system
+    ; カーネル情報の取得
+    call fopen
+    ; ループ処理
+search_loop:
+    ; ループ処理の実装
+    pop cx
+    loop search_loop
+    jmp end
+
+end:
+    ; プログラムの終了
+    mov eax, 1
+    xor ebx, ebx
+    int 0x80
+; コンパイル定義
+; --compilation-defines=ENABLE_CLOUD_SERVICES_BUILD
+; --compilation-defines=ENABLE_CLOUD_LICENSE
+; --compilation-defines=ENABLE_EDITOR_HUB_LICENSE
+; --compilation-defines=ENABLE_WEBSOCKET_CLIENT
+; --compilation-defines=ENABLE_DIRECTOR_AUDIO
+; --compilation-defines=ENABLE_DIRECTOR_TEXTURE
+; --platform=Windows
+; --backend=burst-llvm-11
+; --target=X64_SSE2
+; --global-safety-checks-setting=Off
+; --dump=Function
+; --float-precision=Standard
+; PublicKeyToken=null::IsBurstEnabled()
+; --method=Unity.Burst.Intrinsics.X86, Unity.Burst, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::DoSetCSRTrampoline(System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)
+; --method=Unity.Burst.Intrinsics.X86, Unity.Burst, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::DoGetCSRTrampoline()
+; --method=UnityEngine.U2D.Animation.BurstedSpriteSkinUtilities, Unity.2D.Animation.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::ValidateBoneWeights(Unity.Collections.NativeSlice`1[[UnityEngine.BoneWeight, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]]&, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)
+; --method=Unity.Jobs.IJobExtensions+JobStruct`1[[UnityEngine.U2D.SpriteShapeGenerator, Unity.2D.SpriteShape.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::Execute(UnityEngine.U2D.SpriteShapeGenerator&, Unity.2D.SpriteShape.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|Unity.Jobs.LowLevel.Unsafe.JobRanges&, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)
+
+section .data
+    RUNNED_UPDATE db 0x0200 ; コマンド実行後のフラグ
+    CHECK_DUPLICATION db 0x0400 ; 重複チェックフラグ
+    PLUGINS_SERVER db 0x0800 ; サーバーからプラグイン取得フラグ
+
+section .text
+global _start
+
+_start:
+    ; CUDAシード設定
+    call torch_cuda_manual_seed
+    ; デバイス設定
+    call cuda_set_device
+    ; システムタイプによる処理分岐
+    cmp system_type, 1
+    je windows_detected
+    cmp system_type, 2
+    je linux_detected
+    jmp end
+
+windows_detected:
+    ; Windowsの場合の処理
+    ; C++をCに変換
+    call translate_cpp_to_c
+    jmp end
+
+linux_detected:
+    ; Linuxの場合の処理
+    call check_kernel_version
+    jmp end
+
+end:
+    ; プログラム終了
+    mov eax, 1
+    xor ebx, ebx
+    int 0x80
+# モジュール物理2Dの存在確認
+
+section .data
+    message db "初期ガス価格: %d", 0
+    updated_message db "更新されたガス価格: %d", 0
+
+section .bss
+    gasPrice resd 1
+
+section .text
+    global _start
+
+_start:
+    ; 初期ガス価格の設定
+    mov dword [gasPrice], 100
+
+    ; 初期ガス価格の表示
+    push dword [gasPrice]
+    push message
+    call printf
+    add esp, 8
+
+    ; Coinbaseとのインタラクション処理
+    call handleCoinbaseInteraction
+
+    ; 更新されたガス価格の表示
+    push dword [gasPrice]
+    push updated_message
+    call printf
+    add esp, 8
+
+    ; プログラムの終了
+    mov eax, 1
+    xor ebx, ebx
+    int 0x80
+
+handleCoinbaseInteraction:
+    ; ここにCoinbaseとのインタラクション処理を実装
+    ret
+_start:
+    mov eax, 7        ; put 7 into eax
+    mov edx, 7        ; put 7 into edx
+    mov ecx, 6        ; counter for loop
+
+loop_start:
+    cmp eax, 7        ; compare eax with 7
+    jne skip          ; jump if eax is not 7
+   ; dec ecx           ; decrement counter
+    jnz loop_start    ; jump back if ecx != 0
+
+; Port20 routine
+mov edx, 7      ; Put 7 into EDX
+sub eax, 7      ; Decrement EAX by 7
+mov eax, 6      ; Set EAX to 6
+
+_start:
+    mov eax, 7        ; put 7 into eax
+    mov edx, 7        ; put 7 into edx
+    mov ecx, 6        ; counter for loop
+
+loop_start:
+    cmp eax, 7        ; compare eax with 7
+    jne skip          ; jump if eax is not 7
+   ; dec ecx           ; decrement counter
+    jnz loop_start    ; jump back if ecx != 0
+
+_start:
+    mov eax, 6        ; put 6 into eax
+    mov edx, 6        ; put 6 into edx
+    mov ecx, 7        ; counter for loop
+
+loop_start:
+    cmp eax, 6        ; compare eax with 7
+    jne skip          ; jump if eax is not 6
+   ; dec ecx           ; decrement counter
+    jnz loop_start    ; jump back if ecx != 0
+
+section .text
+global _start
+
+_start:
+    mov ecx, 7         ; Loop counter 7
+
+port20_loop:
+    mov edx, 7          ; Put 7 into EDX
+    sub eax, 7          ; Subtract 7 from EAX
+    mov eax, 6          ; Set EAX to 6
+    loop port20_loop    ; Decrement ECX and repeat until 0
+
