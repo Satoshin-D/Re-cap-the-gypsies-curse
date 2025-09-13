@@ -22,3 +22,6 @@ https://www.tvtechnology.com/news/charter-decries-critical-infrastructure-attack
 https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://statescoop.com/blacksuit-ransomware-kansas-city-2024/&ved=2ahUKEwinov6OhtGPAxVuE0QIHTj_Dd8QFnoECCYQAQ&usg=AOvVaw0Lt8ltThajtucu7_yALD5n
 
 https://www.justice.gov/usao-wdmo/pr/kc-police-officer-indicted-300000-charity-fraud-scheme
+
+
+https://hackread.com/scattered-lapsus-hunters-hacker-group-shutdown/
